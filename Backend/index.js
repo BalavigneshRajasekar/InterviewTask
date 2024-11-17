@@ -1,7 +1,24 @@
 const express = require("express");
-
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+require("dotenv").config();
+const cors = require("cors");
+//Server configuration
 const server = express();
+//Middlewares
+server.use(cors());
+server.use(bodyParser.json({ extended: true }));
 
-server.listen("3000", () => {
-  console.log("server running on port 3000");
+//Routes Import
+const registrationRoute = require("./routes/authentication");
+
+//Routes
+server.use("/api", registrationRoute);
+
+//Database and Server Connection
+mongoose.connect(process.env.MONGODB).then(() => {
+  console.log("Connected to MongoDB");
+  server.listen(process.env.PORT, () => {
+    console.log(`Server is running on port ${process.env.PORT}`);
+  });
 });
