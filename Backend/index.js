@@ -11,9 +11,11 @@ server.use(bodyParser.json({ extended: true }));
 
 //Routes Import
 const registrationRoute = require("./routes/authentication");
+const employeeRoute = require("./routes/employee");
 
 //Routes
 server.use("/api", registrationRoute);
+server.use("/api/employees", employeeRoute);
 
 //Database and Server Connection
 mongoose.connect(process.env.MONGODB).then(() => {
