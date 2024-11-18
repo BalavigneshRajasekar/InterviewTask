@@ -12,7 +12,7 @@ function Register() {
         "http://localhost:3000/api/register",
         values
       );
-      message.success("Registration Successful!");
+      message.success(response.data.message);
       setTimeout(() => {
         navigate("/login");
       }, 2000);
