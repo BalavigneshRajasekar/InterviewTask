@@ -31,6 +31,10 @@ const employeeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  created_at: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Employee = mongoose.model("Employee", employeeSchema);
