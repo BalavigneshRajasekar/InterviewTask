@@ -56,6 +56,10 @@ function Login() {
                 required: true,
                 message: "Please input your Password!",
               },
+              {
+                min: 6,
+                message: "Password must be at least 6 characters long!",
+              },
             ]}
           >
             <Input
