@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-import { Button, Checkbox, Form, Input, message } from "antd";
+import { Checkbox, Form, Input, message } from "antd";
 import { MailTwoTone, UnlockTwoTone, ContactsTwoTone } from "@ant-design/icons";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { Button } from "flowbite-react";
 function Register() {
   const navigate = useNavigate();
   const onFinish = async (values) => {
@@ -24,6 +25,9 @@ function Register() {
   return (
     <div>
       <div className="logDiv">
+        <h2 className="font-black mb-4 border-b-2 pb-6 border-pink-400">
+          Create Account
+        </h2>
         <Form onFinish={onFinish} onFinishFailed={onFinishFailed}>
           <Form.Item
             name="userName"
@@ -81,13 +85,17 @@ function Register() {
             />
           </Form.Item>
           <Form.Item label={null}>
-            <Button type="primary" htmlType="submit">
-              SignUp
+            <Button
+              type="submit"
+              gradientDuoTone="purpleToPink"
+              className="mt-2"
+            >
+              Submit
             </Button>
           </Form.Item>
         </Form>
-        <h6>
-          Go to <Link to={"/"}>Login</Link>
+        <h6 className="font-black">
+          Go to <Link to={"/login"}>Login</Link>
         </h6>
       </div>
     </div>
