@@ -11,7 +11,10 @@ function LandingPage() {
       <div className="container mt-14 ">
         <h6 className="text-right ">
           Don't Have an account ?{" "}
-          <span className="border-2 p-2 rounded border-pink-400 cursor-pointer hover:bg-pink-400">
+          <span
+            className="border-2 p-2 rounded border-pink-400 cursor-pointer hover:bg-pink-400"
+            onClick={() => navigate("/register")}
+          >
             Create One
           </span>
         </h6>
