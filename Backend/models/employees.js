@@ -25,7 +25,7 @@ const employeeSchema = new mongoose.Schema({
   },
 
   image: {
-    type: String,
+    type: [String],
     required: true,
   },
   created_at: {

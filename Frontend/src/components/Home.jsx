@@ -73,7 +73,7 @@ function Home() {
     // API call to add employee to DB
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/employees/Add",
+        "https://employee-doco.onrender.com/api/employees/Add",
         formData
       );
       message.success(response.data.message);
@@ -151,7 +151,6 @@ function Home() {
                 {
                   required: true,
                   message: "Plz select the employee picture",
-                  type: "object",
                 },
                 {
                   max: 2 * 1024 * 1024, // 2MB
