@@ -49,7 +49,12 @@ router.post("/Login", async (req, res) => {
         expiresIn: "1d",
       }
     );
-    res.json({ message: "Logged in successfully", data: token });
+    res.json({
+      message: "Logged in successfully",
+      data: token,
+      name: userExist.userName,
+      email: userExist.userEmail,
+    });
   } catch (e) {
     res.status(400).json({ message: "Invalid credentials" });
   }

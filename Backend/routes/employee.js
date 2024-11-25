@@ -11,7 +11,7 @@ const upload = multer({ storage: memory });
 
 // Add employees to DB
 employeeRouter.post("/Add", upload.array("media"), async (req, res) => {
-  const { name, email, mobileNumber, designation, gender, course } = req.body;
+  const { name, email, mobileNumber, designation, gender } = req.body;
   try {
     //Upload image to cloudinary
     const mediaUrls = await Promise.all(
@@ -52,7 +52,7 @@ employeeRouter.post("/Add", upload.array("media"), async (req, res) => {
       mobileNumber,
       designation,
       gender,
-      course,
+
       image: mediaUrls,
     });
     res
@@ -77,7 +77,7 @@ employeeRouter.get("/get", async (req, res) => {
 // edit employee details by ID
 
 employeeRouter.put("/edit/:id", upload.single("media"), async (req, res) => {
-  const { name, email, mobileNumber, designation, gender, course } = req.body;
+  const { name, email, mobileNumber, designation, gender } = req.body;
   const { id } = req.params;
   try {
     //Upload image to cloudinary
@@ -106,7 +106,6 @@ employeeRouter.put("/edit/:id", upload.single("media"), async (req, res) => {
         mobileNumber,
         designation,
         gender,
-        course,
         image: mediaUrls,
       },
       { new: true, runValidators: true }

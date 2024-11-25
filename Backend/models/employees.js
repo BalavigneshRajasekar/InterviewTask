@@ -23,10 +23,7 @@ const employeeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  course: {
-    type: String,
-    required: true,
-  },
+
   image: {
     type: String,
     required: true,

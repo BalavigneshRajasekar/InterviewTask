@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
-import React from "react";
+import React, { useEffect } from "react";
 import { Checkbox, Form, Input, message } from "antd";
 import { MailTwoTone, UnlockTwoTone } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,6 +17,8 @@ function Login() {
       );
       message.success(response.data.message);
       localStorage.setItem("token", response.data.data);
+      localStorage.setItem("name", response.data.name);
+      localStorage.setItem("email", response.data.email);
       navigate("/home");
     } catch (e) {
       message.error(e.response.data.message);
@@ -25,6 +27,11 @@ function Login() {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/home");
+    }
+  });
   return (
     <>
       <div className="h-full">
