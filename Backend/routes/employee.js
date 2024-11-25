@@ -53,7 +53,9 @@ employeeRouter.post("/Add", upload.array("media"), async (req, res) => {
       designation,
       gender,
 
-      image: mediaUrls,
+      image: mediaUrls.filter(
+        (url) => url.endsWith(".jpg") || url.endsWith(".png")
+      ),
     });
     res
       .status(201)
@@ -106,7 +108,9 @@ employeeRouter.put("/edit/:id", upload.single("media"), async (req, res) => {
         mobileNumber,
         designation,
         gender,
-        image: mediaUrls,
+        image: mediaUrls.filter(
+          (url) => url.endsWith(".jpg") || url.endsWith(".png")
+        ),
       },
       { new: true, runValidators: true }
     );
