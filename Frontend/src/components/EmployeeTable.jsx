@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
-import { Avatar, Card, Empty, Flex } from "antd";
+import { Avatar, Card, Empty, Flex, Badge } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -26,41 +26,41 @@ function EmployeeTable(props) {
       <Flex gap="middle" align="center" justify="center" wrap>
         {props.employees.length > 0 ? (
           props.employees.map((emp, index) => (
-            <Card
-              loading={props.cardLoading}
-              key={index}
-              hoverable
-              actions={[
-                <EditOutlined
-                  key="edit"
-                  onClick={() => edit(emp)}
-                  style={{ color: "green" }}
-                />,
-                <DeleteOutlined
-                  key="setting"
-                  style={{ color: "red" }}
-                  onClick={() => deleteEmployee(emp._id)}
-                />,
-                <EllipsisOutlined key="ellipsis" style={{ color: "blue" }} />,
-              ]}
-              style={{
-                minWidth: 300,
-                border: "1px solid pink",
-              }}
-            >
-              <Card.Meta
-                avatar={
-                  <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" />
-                }
-                title={emp.name}
-                description={
-                  <>
-                    <p>This is the description</p>
-                    <p>This is the description</p>
-                  </>
-                }
-              />
-            </Card>
+            <Badge.Ribbon text={emp.designation} key={index}>
+              <Card
+                loading={props.cardLoading}
+                hoverable
+                actions={[
+                  <EditOutlined
+                    key="edit"
+                    onClick={() => edit(emp)}
+                    style={{ color: "green" }}
+                  />,
+                  <DeleteOutlined
+                    key="setting"
+                    style={{ color: "red" }}
+                    onClick={() => deleteEmployee(emp._id)}
+                  />,
+                  <EllipsisOutlined key="ellipsis" style={{ color: "blue" }} />,
+                ]}
+                style={{
+                  minWidth: 300,
+                  border: "1px solid pink",
+                }}
+              >
+                <Card.Meta
+                  avatar={<Avatar src={emp.image[0]} size={"large"} />}
+                  title={emp.name}
+                  description={
+                    <>
+                      <p>{emp.gender}</p>
+                      <p>{emp.mobileNumber}</p>
+                      <p>{emp.email}</p>
+                    </>
+                  }
+                />
+              </Card>
+            </Badge.Ribbon>
           ))
         ) : (
           <Empty description="no employees"></Empty>
