@@ -11,12 +11,17 @@ import {
 } from "@ant-design/icons";
 import { AiOutlineLoading } from "react-icons/ai";
 import axios from "axios";
+import EmployeeTable from "./EmployeeTable";
 
 function Home() {
   const navigate = useNavigate();
+  const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [addUserModal, setAddUserModal] = useState(false);
   const [media, setMedia] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [cardLoading, setCardLoading] = useState(false);
+  const [btnLoading, setBtnLoading] = useState(false);
   const [user, setUser] = useState({ name: "", email: "", role: "" });
 
   // Fetch user details when component mounts
@@ -25,11 +30,13 @@ function Home() {
     if (!localStorage.getItem("token")) {
       navigate("/");
     }
+
     setUser({
       ...user,
       name: localStorage.getItem("name"),
       email: localStorage.getItem("email"),
     });
+    fetchEmployees();
   }, []);
 
   // Confirm handle the signout once user click on ok in the model
@@ -57,6 +64,7 @@ function Home() {
 
   // Add employee to DB
   const onFinish = (values) => {
+    setBtnLoading(true);
     // Get employees and add it to Form data Object
     const formData = new FormData();
     for (const key in values) {
@@ -67,27 +75,60 @@ function Home() {
       formData.append("media", file.originFileObj);
     });
     // Make API call to add employee to DB
-    addEmployee(formData, values);
+    addEmployee(formData);
   };
-  const addEmployee = async (formData, values) => {
+  const addEmployee = async (formData) => {
     // API call to add employee to DB
     try {
       const response = await axios.post(
         "https://employee-doco.onrender.com/api/employees/Add",
         formData
       );
+      setBtnLoading(false);
+      form.resetFields();
+      form.resetFields;
+
       message.success(response.data.message);
+      fetchEmployees();
+      setAddUserModal(false);
       setTimeout(() => {
         // Reset form
         setMedia([]);
-        values = {};
       }, 2000);
     } catch (error) {
-      message.error("Failed to add employee");
+      setBtnLoading(false);
+      message.error(error.response.data.message);
       console.log(error);
     }
   };
   const onFinishFailed = () => {};
+  const fetchEmployees = async () => {
+    setCardLoading(true);
+    try {
+      const response = await axios.get(
+        "https://employee-doco.onrender.com/api/employees/get"
+      );
+      setEmployees(response.data);
+      setCardLoading(false);
+    } catch (e) {
+      console.error("Failed to fetch employees", e);
+      setCardLoading(false);
+
+      message.error(e.response.data.message);
+    }
+  };
+  const deleteEmployee = async (id) => {
+    try {
+      const response = await axios.delete(
+        `https://employee-doco.onrender.com/api/employees/Delete/${id}`
+      );
+      message.success(response.data.message);
+      fetchEmployees();
+    } catch (e) {
+      message.error(e.response.data.message);
+      console.error("Failed to delete employee", e);
+    }
+  };
   return (
     <div>
       <div>
@@ -137,6 +178,13 @@ function Home() {
           <PlusCircleOutlined className="text-xl me-2" />
           Add User
         </Button>
+
+        <EmployeeTable
+          employees={employees}
+          cardLoading={cardLoading}
+          deleteEmployee={deleteEmployee}
+        />
+
         {/* Modal for adding new user */}
         <Modal
           title="Add User"
@@ -144,7 +192,7 @@ function Home() {
           onOk={addUser}
           onCancel={cancelAddUser}
         >
-          <Form onFinish={onFinish} onFinishFailed={onFinishFailed}>
+          <Form onFinish={onFinish} onFinishFailed={onFinishFailed} form={form}>
             <Form.Item
               label="Upload picture"
               rules={[
@@ -267,7 +315,7 @@ function Home() {
             </Form.Item>
             <Form.Item>
               <Button
-                isProcessing={false}
+                isProcessing={btnLoading}
                 type="primary"
                 htmlType="submit"
                 className="ps-4 pe-4"
