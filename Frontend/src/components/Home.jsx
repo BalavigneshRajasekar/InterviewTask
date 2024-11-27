@@ -45,26 +45,27 @@ function Home() {
           className="bg-gradient-to-r from-pink-500 to-blue-500"
         >
           <div>
-            <h5 className="font-black">Dashboard</h5>
+            <h5 className="font-black">GreyTHR</h5>
           </div>
           <div className="flex md:order-2">
+            <Tag
+              color={user.role == "admin" ? "red-inverse" : "green-inverse"}
+              style={{ height: "20px" }}
+            >
+              {user.role}
+            </Tag>
             <Dropdown
               arrowIcon={false}
               inline
               label={<Avatar alt="User settings" img="" rounded />}
             >
               <Dropdown.Header>
-                <Tag
-                  color={user.role == "admin" ? "red-inverse" : "blue-inverse"}
-                >
-                  {user.role}
-                </Tag>
                 <span className="block text-sm">{user.name}</span>
                 <span className="block truncate text-sm font-medium">
                   {user.email}
                 </span>
               </Dropdown.Header>
-              <Button danger onClick={() => setIsModalOpen(true)}>
+              <Button color="failure" onClick={() => setIsModalOpen(true)}>
                 Signout
               </Button>
             </Dropdown>
