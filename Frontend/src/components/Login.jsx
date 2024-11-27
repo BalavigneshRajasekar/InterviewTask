@@ -1,20 +1,24 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
-import React, { useEffect } from "react";
-import { Checkbox, Form, Input, message } from "antd";
+import React, { useContext, useEffect } from "react";
+import { Form, Input, message } from "antd";
 import { MailTwoTone, UnlockTwoTone } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Button } from "flowbite-react";
+import { EmployeeContext } from "../context/EmployeeContext";
 
 function Login() {
   const navigate = useNavigate();
+  const { btnLoading, setBtnLoading } = useContext(EmployeeContext);
   const onFinish = async (values) => {
+    setBtnLoading(true);
     try {
       const response = await axios.post(
         "https://employee-doco.onrender.com/api/Login",
         values
       );
+      setBtnLoading(false);
       message.success(response.data.message);
       localStorage.setItem("token", response.data.data);
       localStorage.setItem("name", response.data.name);
@@ -22,6 +26,7 @@ function Login() {
       localStorage.setItem("role", response.data.role);
       navigate("/home");
     } catch (e) {
+      setBtnLoading(false);
       message.error(e.response.data.message);
     }
   };
@@ -84,7 +89,8 @@ function Login() {
               <Button
                 type="submit"
                 gradientDuoTone="purpleToPink"
-                className="mt-2"
+                className="mt-2 ps-4 pe-4"
+                isProcessing={btnLoading}
               >
                 Login
               </Button>

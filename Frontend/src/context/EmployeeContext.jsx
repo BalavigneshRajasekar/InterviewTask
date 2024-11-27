@@ -6,9 +6,20 @@ export const EmployeeContext = createContext();
 
 const EmployeeProvider = ({ children }) => {
   const [editValues, setEditValues] = useState(null);
+  const [btnLoading, setBtnLoading] = useState(false);
+  const [employees, setEmployees] = useState([]);
 
   return (
-    <EmployeeContext.Provider value={{ editValues, setEditValues }}>
+    <EmployeeContext.Provider
+      value={{
+        editValues,
+        btnLoading,
+        employees,
+        setEmployees,
+        setBtnLoading,
+        setEditValues,
+      }}
+    >
       {children}
     </EmployeeContext.Provider>
   );

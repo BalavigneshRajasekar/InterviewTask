@@ -1,23 +1,28 @@
 /* eslint-disable no-unused-vars */
-import React from "react";
+import React, { useContext } from "react";
 import { Checkbox, Form, Input, message } from "antd";
 import { MailTwoTone, UnlockTwoTone, ContactsTwoTone } from "@ant-design/icons";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "flowbite-react";
+import { EmployeeContext } from "../context/EmployeeContext";
 function Register() {
   const navigate = useNavigate();
+  const { btnLoading, setBtnLoading } = useContext(EmployeeContext);
   const onFinish = async (values) => {
+    setBtnLoading(true);
     try {
       const response = await axios.post(
         "http://localhost:3000/api/register",
         values
       );
       message.success(response.data.message);
+      setBtnLoading(false);
       setTimeout(() => {
         navigate("/");
       }, 2000);
     } catch (e) {
+      setBtnLoading(false);
       message.error(e.response.data.message);
     }
   };
@@ -88,7 +93,8 @@ function Register() {
             <Button
               type="submit"
               gradientDuoTone="purpleToPink"
-              className="mt-2"
+              className="mt-2 ps-4 pe-4"
+              isProcessing={btnLoading}
             >
               Submit
             </Button>

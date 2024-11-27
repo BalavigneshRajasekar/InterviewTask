@@ -1,15 +1,14 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useContext, useEffect, useState } from "react";
-import { Avatar, Card, Empty, Flex, Badge } from "antd";
+import { Avatar, Card, Empty, Flex, Badge, Tag } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
-  EllipsisOutlined,
-  SettingOutlined,
+  MobileOutlined,
 } from "@ant-design/icons";
 import { Form, Upload, Input, Radio, Select, message, Modal } from "antd";
-import { Dropdown, Navbar, Button } from "flowbite-react";
+import { Button } from "flowbite-react";
 
 import {
   CloudUploadOutlined,
@@ -36,22 +35,28 @@ function EmployeeTable(props) {
 
   const [addUserModal, setAddUserModal] = useState(false);
   const [media, setMedia] = useState([]);
-  const [employees, setEmployees] = useState([]);
   const [cardLoading, setCardLoading] = useState(false);
-  const [btnLoading, setBtnLoading] = useState(false);
-  const { editValues, setEditValues } = useContext(EmployeeContext);
+  const [deleteBtnLoading, setDeleteBtnLoading] = useState(false);
+  const {
+    editValues,
+    setEditValues,
+    btnLoading,
+    setBtnLoading,
+    employees,
+    setEmployees,
+  } = useContext(EmployeeContext);
+
+  // fetch employees data from API
   useEffect(() => {
-    // fetch employees data from API
     fetchEmployees();
-
-    console.log("value changed");
-
-    console.log(editValues);
   }, [editValues]);
 
+  //Add user model ok button
   const addUser = () => {
     setAddUserModal(false);
   };
+
+  // Add user Model Cancel button
   const cancelAddUser = () => {
     setEditValues(null);
     setAddUserModal(false);
@@ -81,13 +86,12 @@ function EmployeeTable(props) {
     media.forEach((file) => {
       formData.append("media", file.originFileObj);
     });
-    // Make API call to add employee to DB
+
     addEmployee(formData);
   };
-  const addEmployee = async (formData) => {
-    console.log("add");
 
-    // API call to add employee to DB
+  // API call to add employee to DB
+  const addEmployee = async (formData) => {
     try {
       const response = await axios.post(
         "https://employee-doco.onrender.com/api/employees/Add",
@@ -111,6 +115,7 @@ function EmployeeTable(props) {
     }
   };
   const onFinishFailed = () => {};
+
   //Get all employees from Db
   const fetchEmployees = async () => {
     setCardLoading(true);
@@ -130,6 +135,7 @@ function EmployeeTable(props) {
 
   // Delete employee Function
   const deleteEmployee = async (id) => {
+    setDeleteBtnLoading(true);
     try {
       const response = await axios.delete(
         `https://employee-doco.onrender.com/api/employees/Delete/${id}`,
@@ -140,9 +146,11 @@ function EmployeeTable(props) {
         }
       );
       message.success(response.data.message);
+      setDeleteBtnLoading(false);
       fetchEmployees();
     } catch (e) {
       message.error(e.response.data.message);
+      setDeleteBtnLoading(false);
       console.error("Failed to delete employee", e);
     }
   };
@@ -167,10 +175,10 @@ function EmployeeTable(props) {
     media.forEach((file) => {
       formData.append("media", file.originFileObj);
     });
-    // Make API call to add employee to DB
+
     edit(formData);
   };
-
+  // Make API call to add employee to DB
   const edit = async (formdata) => {
     try {
       const response = await axios.put(
@@ -196,7 +204,11 @@ function EmployeeTable(props) {
   };
   return (
     <>
-      <div>
+      <div
+        className={
+          localStorage.getItem("role") == "admin" ? "d-block" : "d-none"
+        }
+      >
         <Button
           gradientDuoTone="greenToBlue"
           className="mt-10"
@@ -206,30 +218,31 @@ function EmployeeTable(props) {
           Add User
         </Button>
       </div>
-      <div>
+      <div className="mt-5">
         <Flex gap="middle" align="center" justify="center" wrap>
           {employees.length > 0 ? (
             employees.map((emp, index) => (
-              <Badge.Ribbon text={emp.designation} key={index}>
+              <Badge.Ribbon text={emp.designation} key={index} color="green">
                 <Card
                   loading={cardLoading}
                   hoverable
-                  actions={[
-                    <EditOutlined
-                      key="edit"
-                      onClick={() => editEmployee(emp)}
-                      style={{ color: "green" }}
-                    />,
-                    <DeleteOutlined
-                      key="setting"
-                      style={{ color: "red" }}
-                      onClick={() => deleteEmployee(emp._id)}
-                    />,
-                    <EllipsisOutlined
-                      key="ellipsis"
-                      style={{ color: "blue" }}
-                    />,
-                  ]}
+                  actions={
+                    localStorage.getItem("role") == "admin"
+                      ? [
+                          <EditOutlined
+                            key="edit"
+                            onClick={() => editEmployee(emp)}
+                            style={{ color: "green" }}
+                          />,
+                          <DeleteOutlined
+                            key="setting"
+                            style={{ color: "red" }}
+                            onClick={() => deleteEmployee(emp._id)}
+                            spin={deleteBtnLoading}
+                          />,
+                        ]
+                      : ""
+                  }
                   style={{
                     minWidth: 300,
                     border: "1px solid pink",
@@ -240,9 +253,24 @@ function EmployeeTable(props) {
                     title={emp.name}
                     description={
                       <>
-                        <p>{emp.gender}</p>
-                        <p>{emp.mobileNumber}</p>
-                        <p>{emp.email}</p>
+                        <Tag
+                          color={
+                            emp.gender == "Male"
+                              ? "volcano-inverse"
+                              : "purple-inverse"
+                          }
+                        >
+                          {emp.gender}
+                        </Tag>
+                        <p className="mt-2">
+                          <MobileOutlined className="me-2" />
+                          +91 {emp.mobileNumber}
+                        </p>
+                        <p>
+                          <MailOutlined className="me-2" />
+                          {emp.email}
+                        </p>
+                        <p></p>
                       </>
                     }
                   />

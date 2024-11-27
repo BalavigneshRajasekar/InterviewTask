@@ -1,19 +1,9 @@
 /* eslint-disable no-unused-vars */
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, Dropdown, Navbar, Button } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
-import { Form, Modal, Upload, Input, Radio, Select, message } from "antd";
-import {
-  CloudUploadOutlined,
-  ContactsOutlined,
-  MailOutlined,
-  PlusCircleOutlined,
-} from "@ant-design/icons";
-import { AiOutlineLoading } from "react-icons/ai";
-import axios from "axios";
+import { Modal, Tag } from "antd";
 import EmployeeTable from "./EmployeeTable";
-import Forms from "./Forms";
-import { EmployeeContext } from "../context/EmployeeContext";
 
 function Home() {
   const navigate = useNavigate();
@@ -31,6 +21,7 @@ function Home() {
       ...user,
       name: localStorage.getItem("name"),
       email: localStorage.getItem("email"),
+      role: localStorage.getItem("role"),
     });
   }, []);
 
@@ -63,6 +54,11 @@ function Home() {
               label={<Avatar alt="User settings" img="" rounded />}
             >
               <Dropdown.Header>
+                <Tag
+                  color={user.role == "admin" ? "red-inverse" : "blue-inverse"}
+                >
+                  {user.role}
+                </Tag>
                 <span className="block text-sm">{user.name}</span>
                 <span className="block truncate text-sm font-medium">
                   {user.email}
@@ -85,6 +81,8 @@ function Home() {
           <p>are you sure want to signout ?</p>
         </Modal>
       </div>
+
+      {/* Employee card and forms */}
       <div className="container">
         <EmployeeTable />
       </div>
