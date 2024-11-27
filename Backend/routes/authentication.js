@@ -55,6 +55,7 @@ router.post("/Login", async (req, res) => {
       data: token,
       name: userExist.userName,
       email: userExist.userEmail,
+      role: userExist.role,
     });
   } catch (e) {
     res.status(400).json({ message: "Invalid credentials" });

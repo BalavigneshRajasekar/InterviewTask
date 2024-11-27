@@ -10,10 +10,7 @@ import {
 } from "@ant-design/icons";
 
 function EmployeeTable(props) {
-  const { deleteEmployee } = props;
-  const edit = (emp) => {
-    console.log(emp);
-  };
+  const { deleteEmployee, editEmployee } = props;
 
   useEffect(() => {
     // fetch employees data from API
@@ -33,7 +30,7 @@ function EmployeeTable(props) {
                 actions={[
                   <EditOutlined
                     key="edit"
-                    onClick={() => edit(emp)}
+                    onClick={() => editEmployee(emp)}
                     style={{ color: "green" }}
                   />,
                   <DeleteOutlined

@@ -12,13 +12,14 @@ function Login() {
   const onFinish = async (values) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/Login",
+        "https://employee-doco.onrender.com/api/Login",
         values
       );
       message.success(response.data.message);
       localStorage.setItem("token", response.data.data);
       localStorage.setItem("name", response.data.name);
       localStorage.setItem("email", response.data.email);
+      localStorage.setItem("role", response.data.role);
       navigate("/home");
     } catch (e) {
       message.error(e.response.data.message);

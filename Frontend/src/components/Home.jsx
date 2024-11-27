@@ -20,6 +20,7 @@ function Home() {
   const [addUserModal, setAddUserModal] = useState(false);
   const [media, setMedia] = useState([]);
   const [employees, setEmployees] = useState([]);
+  const [editValues, setEditValues] = useState(null);
   const [cardLoading, setCardLoading] = useState(false);
   const [btnLoading, setBtnLoading] = useState(false);
   const [user, setUser] = useState({ name: "", email: "", role: "" });
@@ -57,6 +58,12 @@ function Home() {
     setAddUserModal(false);
   };
 
+  //Add user model popup
+  const addUserForm = () => {
+    setEditValues(null);
+    setAddUserModal(true);
+  };
+
   // Add media to specific state
   const handleUpload = ({ fileList }) => {
     setMedia(fileList);
@@ -82,7 +89,12 @@ function Home() {
     try {
       const response = await axios.post(
         "https://employee-doco.onrender.com/api/employees/Add",
-        formData
+        formData,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
       );
       setBtnLoading(false);
       form.resetFields();
@@ -91,10 +103,6 @@ function Home() {
       message.success(response.data.message);
       fetchEmployees();
       setAddUserModal(false);
-      setTimeout(() => {
-        // Reset form
-        setMedia([]);
-      }, 2000);
     } catch (error) {
       setBtnLoading(false);
       message.error(error.response.data.message);
@@ -102,6 +110,7 @@ function Home() {
     }
   };
   const onFinishFailed = () => {};
+  //Get all employees from Db
   const fetchEmployees = async () => {
     setCardLoading(true);
     try {
@@ -118,6 +127,8 @@ function Home() {
       message.error(e.response.data.message);
     }
   };
+
+  // Delete employee Function
   const deleteEmployee = async (id) => {
     try {
       const response = await axios.delete(
@@ -134,6 +145,13 @@ function Home() {
       message.error(e.response.data.message);
       console.error("Failed to delete employee", e);
     }
+  };
+
+  // Edit employee model popup
+  const editEmployee = (emp) => {
+    setEditValues(emp);
+    setAddUserModal(true);
+    console.log(editValues);
   };
   return (
     <div>
@@ -179,21 +197,24 @@ function Home() {
         <Button
           gradientDuoTone="greenToBlue"
           className="mt-10"
-          onClick={() => setAddUserModal(true)}
+          onClick={() => addUserForm()}
         >
           <PlusCircleOutlined className="text-xl me-2" />
           Add User
         </Button>
 
+        {/* Employee card component */}
+
         <EmployeeTable
           employees={employees}
           cardLoading={cardLoading}
           deleteEmployee={deleteEmployee}
+          editEmployee={editEmployee}
         />
 
-        {/* Modal for adding new user */}
+        {/* Modal for adding new user  */}
         <Modal
-          title="Add User"
+          title={editValues ? "Edit Employee" : "Add Employee"}
           open={addUserModal}
           onOk={addUser}
           onCancel={cancelAddUser}
@@ -229,6 +250,7 @@ function Home() {
             </Form.Item>
             <Form.Item
               name="name"
+              initialValue={editValues ? editValues.name : ""}
               rules={[
                 {
                   type: "string",
@@ -244,6 +266,7 @@ function Home() {
             </Form.Item>
             <Form.Item
               name="email"
+              initialValue={editValues ? editValues.email : ""}
               rules={[
                 {
                   type: "email",
@@ -260,6 +283,7 @@ function Home() {
             </Form.Item>
             <Form.Item
               name="mobileNumber"
+              initialValue={editValues ? editValues.mobileNumber : ""}
               rules={[
                 {
                   type: "string",
@@ -284,7 +308,7 @@ function Home() {
             <Form.Item
               name="gender"
               label="Gender"
-              initialValue=""
+              initialValue={editValues ? editValues.gender : ""}
               placeholder="Select Gender"
               rules={[
                 {
@@ -302,6 +326,7 @@ function Home() {
             <Form.Item
               name="designation"
               label="Designation"
+              initialValue={editValues ? editValues.designation : ""}
               rules={[
                 {
                   type: "string",
@@ -327,7 +352,7 @@ function Home() {
                 className="ps-4 pe-4"
                 gradientDuoTone="purpleToBlue"
               >
-                Add
+                {editValues ? "Update" : "Add"}
               </Button>
             </Form.Item>
           </Form>
