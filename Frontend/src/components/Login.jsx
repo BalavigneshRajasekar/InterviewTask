@@ -79,7 +79,7 @@ function Login() {
                 },
               ]}
             >
-              <Input
+              <Input.Password
                 type="password"
                 placeholder="Enter your password"
                 prefix={<UnlockTwoTone />}
