@@ -6,18 +6,21 @@ import Home from "./components/Home";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Register from "./components/Register";
 import LandingPage from "./components/LandingPage";
+import EmployeeProvider from "./context/EmployeeContext";
 
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LandingPage />}></Route>
-          <Route path="/login" element={<Login />}></Route>
-          <Route path="/register" element={<Register />}></Route>
-          <Route path="/home" element={<Home />}></Route>
-        </Routes>
-      </BrowserRouter>
+      <EmployeeProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<LandingPage />}></Route>
+            <Route path="/login" element={<Login />}></Route>
+            <Route path="/register" element={<Register />}></Route>
+            <Route path="/home" element={<Home />}></Route>
+          </Routes>
+        </BrowserRouter>
+      </EmployeeProvider>
     </>
   );
 }

@@ -93,7 +93,7 @@ employeeRouter.put(
   "/edit/:id",
   tokenAuth,
   roleAuth("admin"),
-  upload.single("media"),
+  upload.array("media"),
   async (req, res) => {
     const { name, email, mobileNumber, designation, gender } = req.body;
     const { id } = req.params;
