@@ -43,6 +43,7 @@ router.post("/Login", async (req, res) => {
         name: userExist.userName,
         id: userExist._id,
         email: userExist.userEmail,
+        role: userExist.role,
       },
       process.env.Token,
       {

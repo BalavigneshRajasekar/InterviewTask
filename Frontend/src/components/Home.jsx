@@ -110,6 +110,7 @@ function Home() {
       );
       setEmployees(response.data);
       setCardLoading(false);
+      console.log(response.data);
     } catch (e) {
       console.error("Failed to fetch employees", e);
       setCardLoading(false);
@@ -120,7 +121,12 @@ function Home() {
   const deleteEmployee = async (id) => {
     try {
       const response = await axios.delete(
-        `https://employee-doco.onrender.com/api/employees/Delete/${id}`
+        `https://employee-doco.onrender.com/api/employees/Delete/${id}`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
       );
       message.success(response.data.message);
       fetchEmployees();
